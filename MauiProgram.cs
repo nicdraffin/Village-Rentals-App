@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Utility;
+using Village_Rentals_App.Data;
+using Village_Rentals_App.Model;
 
 namespace Village_Rentals_App
 {
@@ -20,6 +23,9 @@ namespace Village_Rentals_App
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<DatabaseContext>();
+            builder.Services.AddSingleton<CustomersViewModel>();
+            builder.Services.AddSingleton<Customer>();
 
             return builder.Build();
         }

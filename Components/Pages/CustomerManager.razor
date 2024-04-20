@@ -1,0 +1,135 @@
+﻿@page "/manager"
+@using Village_Rentals_App.Data;
+@using Utility;
+@inject CustomersViewModel Utility;
+
+<h2 class="title">Manage Customer</h2>
+
+@if (Utility.IsBusy)
+{
+    <div class="loading">
+        <p>Loading...</p>
+        <p>@Utility.BusyText</p>
+    </div>
+}
+
+<h3 class="subtitle">Customers</h3>
+
+@if (Utility.Customers.Any())
+{
+    <div class="customer-container">
+        @foreach (var customer in Utility.Customers)
+        {
+            <div class="customer-card">
+                <div class="customer-info">
+                    <span>@customer.FirstName</span>
+                    <span>@customer.LastName</span>
+                </div>
+                <div class="buttons">
+                    <button @onclick="() => Utility.SetOperatingCustomerCommand.Execute(customer)">Edit</button>
+                    <button @onclick="() => Utility.DeleteCustomerCommand.Execute(customer.Id)">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="no-customers">
+        <h2>No Customers Found</h2>
+        <p>Try creating a Customer from the form below.</p>
+    </div>
+}
+
+<h3 class="subtitle">Register Customer</h3>
+
+<div class="form-container">
+    <div class="form-group">
+        <label for="firstname">First Name:</label>
+        <input type="text" name="firstname" id="firstname" @bind="Utility.OperatingCustomer.FirstName">
+    </div>
+
+    <div class="form-group">
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" id="lastname" @bind="Utility.OperatingCustomer.LastName">
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="text" name="phone" id="phone" @bind="Utility.OperatingCustomer.ContactNumber">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email" @bind="Utility.OperatingCustomer.Email">
+    </div>
+    <button @onclick="Utility.SavecustomerCommand.Execute" class="register-button">Register</button>
+</div>
+
+<style>
+    /* Title and subtitle styling */
+    .title, .subtitle {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Loading text styling */
+    .loading {
+        text-align: center;
+    }
+
+    /* Customer container styling */
+    .customer-container {
+        margin-bottom: 20px;
+    }
+
+    /* Customer card styling */
+    .customer-card {
+        background-color: #ECECEC;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Customer information styling */
+    .customer-info {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Button styling */
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Form container styling */
+    .form-container {
+        margin-bottom: 10px;
+    }
+
+    /* Form group styling */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+        /* Input styling */
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+        }
+
+    /* Register button styling */
+    .register-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
