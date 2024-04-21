@@ -26,6 +26,9 @@ namespace Village_Rentals_App
             builder.Services.AddSingleton<DatabaseContext>();
             builder.Services.AddSingleton<CustomersViewModel>();
             builder.Services.AddSingleton<Customer>();
+            builder.Services.AddSingleton<DatabaseContext>();
+            builder.Services.AddSingleton<Rental>();
+            builder.Services.AddSingleton<RentalsViewModel>();
 
             return builder.Build();
         }

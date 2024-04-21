@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using SQLite;
+using Village_Rentals_App.Model;
 
 
 namespace Village_Rentals_App.Data
@@ -78,6 +79,11 @@ namespace Village_Rentals_App.Data
         public async ValueTask DisposeAsync()
         {
             await _connection?.CloseAsync();
+        }
+
+        internal async Task AddItemAsync<T>(Customer operatingRental)
+        {
+            throw new NotImplementedException();
         }
     }
 }

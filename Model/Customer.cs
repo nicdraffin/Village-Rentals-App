@@ -8,6 +8,7 @@ using SQLite;
 
 namespace Village_Rentals_App.Model
 {
+
     public class Customer
     {
         [PrimaryKey, AutoIncrement]

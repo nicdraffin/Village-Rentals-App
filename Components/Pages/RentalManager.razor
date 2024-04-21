@@ -1,61 +1,144 @@
-﻿@page "/weather"
+﻿@page "/rentals"
 
-<h1>Weather</h1>
+@using Utility
+@using Village_Rentals_App.Data;
+@inject RentalsViewModel Utility;
 
-<p>This component demonstrates showing data.</p>
+<h2 class="title">Manage Rentals</h2>
 
-@if (forecasts == null)
+@if (Utility.IsBusy)
 {
-    <p><em>Loading...</em></p>
+    <div class="loading">
+        <p>Loading...</p>
+        <p>@Utility.BusyText</p>
+    </div>
+}
+
+<h3 class="subtitle">Rentals</h3>
+
+@if (Utility.Rentals.Any())
+{
+    <div class="customer-container">
+        @foreach (var rental in Utility.Rentals)
+        {
+            <div class="customer-card">
+                <div class="customer-info">
+                    <span>@rental.RentalID</span>
+                    <span>@rental.LastName</span>
+                </div>
+                <div class="buttons">
+                    <button @onclick="() => Utility.SetOperatingRentalCommand.Execute(rental)">Edit</button>
+                    <button @onclick="() => Utility.DeleteRentalCommand.Execute(rental.Id)">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="no-customers">
+        <h2>No Rental Found</h2>
+        <p>Try creating a Rental from the form below.</p>
+    </div>
 }
 
-@code {
-    private WeatherForecast[]? forecasts;
+<h3 class="subtitle">Register Customer</h3>
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
+<div class="form-container">
+    <div class="form-group">
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="firstname" id="lastname" @bind="Utility.OperatingRental.LastName">
+    </div>
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+    <div class="form-group">
+        <label for="equipmentID">Equipment ID:</label>
+        <input type="number" name="equipmentID" id="equipmentID" @bind="Utility.OperatingRental.EquipmentID">
+    </div>
+
+    <div class="form-group">
+        <label for="rentalID">Rental ID:</label>
+        <input type="number" name="rentalID" id="rentalID" @bind="Utility.OperatingRental.RentalID">
+    </div>
+
+    <div class="form-group">
+        <label for="rentalamount">Rental Amount:</label>
+        <input type="number" name="rentalamount" id="rentalamount" @bind="Utility.OperatingRental.RentalAmount">
+    </div>
+    <div class="form-group">
+        <label for="rentalstart">Rental Start Date:</label>
+        <input type="text" name="rentalstart" id="rentalstart" @bind="Utility.OperatingRental.RentalStartdate">
+    </div>
+    <div class="form-group">
+        <label for="rentalend">Rental End Date:</label>
+        <input type="text" name="rentalend" id="rentalend" @bind="Utility.OperatingRental.RentalEnddate">
+    </div>
+    <button @onclick="Utility.SaveRentalCommand.Execute" class="register-button">Register</button>
+</div>
+
+<style>
+    /* Title and subtitle styling */
+    .title, .subtitle {
+        text-align: center;
+        margin-bottom: 20px;
     }
 
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    /* Loading text styling */
+    .loading {
+        text-align: center;
     }
-}
+
+    /* Customer container styling */
+    .customer-container {
+        margin-bottom: 20px;
+    }
+
+    /* Customer card styling */
+    .customer-card {
+        background-color: #ECECEC;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Customer information styling */
+    .customer-info {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Button styling */
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Form container styling */
+    .form-container {
+        margin-bottom: 10px;
+    }
+
+    /* Form group styling */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+        /* Input styling */
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+        }
+
+    /* Register button styling */
+    .register-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
