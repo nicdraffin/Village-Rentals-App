@@ -1,0 +1,148 @@
+﻿@page "/inventory"
+
+@using Utility
+@using Village_Rentals_App.Data;
+@inject InventoryViewModel Utility;
+
+<h2 class="title">Manage Inventory</h2>
+
+@if (Utility.IsBusy)
+{
+    <div class="loading">
+        <p>Loading...</p>
+        <p>@Utility.BusyText</p>
+    </div>
+}
+
+<h3 class="subtitle">Inventory</h3>
+
+@if (Utility.Inventorys.Any())
+{
+    <div class="customer-container">
+        @foreach (var inventory in Utility.Inventorys)
+        {
+            <div class="customer-card">
+                <div class="customer-info">
+                    <span>@inventory.CategoryName</span>
+                    <span>@inventory.Name</span>
+                </div>
+                <div class="buttons">
+                    <button @onclick="() => Utility.SetOperatingInventoryCommand.Execute(inventory)">Edit</button>
+                    <button @onclick="() => Utility.DeleteInventoryCommand.Execute(inventory.Id)">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="no-customers">
+        <h2>No Inventory Found</h2>
+        <p>Try creating Inventory from the form below.</p>
+    </div>
+}
+
+<h3 class="subtitle">Add / Edit Inventory</h3>
+
+<div class="form-container">
+    <div class="form-group">
+        <label for="equipmentid">Equipment ID:</label>
+        <input type="number" name="equipmentid" id="equipmentid" @bind="Utility.OperatingInventory.EquipmentID">
+    </div>
+
+    <div class="form-group">
+        <label for="categoryName">Category:</label>
+        <input type="text" name="categoryName" id="categoryName" @bind="Utility.OperatingInventory.CategoryName">
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" @bind="Utility.OperatingInventory.Name">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" name="description" id="description" @bind="Utility.OperatingInventory.Description">
+    </div>
+    <div class="form-group">
+        <label for="rentalcost">Rental Cost:</label>
+        <input type="number" name="rentalcost" id="rentalcost" @bind="Utility.OperatingInventory.RentalCost">
+    </div>
+    <div class="form-group">
+        <label for="working">Is Working?</label>
+        <input type="checkbox" name="working" id="working" @bind="Utility.OperatingInventory.Working">
+    </div>
+    <div class="form-group">
+        <label for="rented">Rented?</label>
+        <input type="checkbox" name="rented" id="rented" @bind="Utility.OperatingInventory.Rented">
+    </div>
+    <button @onclick="Utility.SaveInventoryCommand.Execute" class="register-button">Update</button>
+</div>
+
+<style>
+    /* Title and subtitle styling */
+    .title, .subtitle {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Loading text styling */
+    .loading {
+        text-align: center;
+    }
+
+    /* Customer container styling */
+    .customer-container {
+        margin-bottom: 20px;
+    }
+
+    /* Customer card styling */
+    .customer-card {
+        background-color: #ECECEC;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Customer information styling */
+    .customer-info {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Button styling */
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Form container styling */
+    .form-container {
+        margin-bottom: 10px;
+    }
+
+    /* Form group styling */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+        /* Input styling */
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+        }
+
+    /* Register button styling */
+    .register-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>

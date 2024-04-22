@@ -80,10 +80,5 @@ namespace Village_Rentals_App.Data
         {
             await _connection?.CloseAsync();
         }
-
-        internal async Task AddItemAsync<T>(Customer operatingRental)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
