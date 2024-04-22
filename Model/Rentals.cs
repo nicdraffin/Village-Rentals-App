@@ -8,7 +8,7 @@ namespace Village_Rentals_App.Model
         public int Id { get; set; }
         public int EquipmentID { get; set; }
         public int RentalID { get; set; }
-        public int RentalAmount { get; set; }
+        public double RentalAmount { get; set; }
         public string RentalStartdate { get; set; }
         public string RentalEnddate { get; set; }
         public string LastName { get; set; }

@@ -3,24 +3,23 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Village_Rentals_App.Data;
 using Village_Rentals_App.Model;
-using Utility;
-using Village_Rentals_App.Components.Pages;
+
 namespace Utility
 {
-    public partial class RentalsViewModel : ObservableObject
+    public partial class CategoryViewModel : ObservableObject
     {
         private readonly DatabaseContext _context;
 
-        public RentalsViewModel(DatabaseContext context)
+        public CategoryViewModel(DatabaseContext context)
         {
             _context = context;
         }
 
         [ObservableProperty]
-        private ObservableCollection<Rental> _rentals = new();
+        private ObservableCollection<Category> _inventorys = new();
 
         [ObservableProperty]
-        private Rental _operatingRental = new();
+        private Category _operatingInventory = new();
 
         [ObservableProperty]
         private bool _isBusy;
@@ -28,58 +27,58 @@ namespace Utility
         [ObservableProperty]
         private string _busyText;
 
-        public async Task LoadrentalsAsync()
+        public async Task LoadInventoryAsync()
         {
             await ExecuteAsync(async () =>
             {
-                var rentals = await _context.GetAllAsync<Rental>();
-                if (rentals is not null && rentals.Any())
+                var inventorys = await _context.GetAllAsync<Category>();
+                if (inventorys is not null && inventorys.Any())
                 {
-                    Rentals ??= new ObservableCollection<Rental>();
+                    Inventorys ??= new ObservableCollection<Category>();
 
-                    foreach (var rental in rentals)
+                    foreach (var inventory in inventorys)
                     {
-                        Rentals.Add(rental);
+                        Inventorys.Add(inventory);
                     }
                 }
-            }, "Fetching rentals...");
+            }, "Fetching Inventory...");
         }
 
         [RelayCommand]
-        private void SetOperatingRental(Rental rental) => OperatingRental = rental ?? new();
+        private void SetOperatingInventory(Category inventory) => OperatingInventory = inventory ?? new();
 
         [RelayCommand]
-        public async Task SaveRentalAsync()
+        public async Task SaveInventoryAsync()
         {
-            if (OperatingRental is null)
+            if (OperatingInventory is null)
                 return;
 
-            var (isValid, errorMessage) = OperatingRental.Validate();
+            var (isValid, errorMessage) = OperatingInventory.Validate();
             if (!isValid)
             {
                 await Shell.Current.DisplayAlert("Validation Error", errorMessage, "OK");
                 return;
             }
 
-            var busyText = OperatingRental.Id == 0 ? "Creating Rental..." : "Updating Rental...";
+            var busyText = OperatingInventory.Id == 0 ? "Creating Category..." : "Updating Categories...";
             await ExecuteAsync(async () =>
             {
-                if (OperatingRental.Id == 0)
+                if (OperatingInventory.Id == 0)
                 {
-                    await _context.AddItemAsync<Rental>(OperatingRental);
-                    Rentals.Add(OperatingRental);
+                    await _context.AddItemAsync<Category>(OperatingInventory);
+                    Inventorys.Add(OperatingInventory);
                 }
                 else
                 {
-                    // Update Rental
-                    if (await _context.UpdateItemAsync<Rental>(OperatingRental))
+                    // Update Inventory
+                    if (await _context.UpdateItemAsync<Category>(OperatingInventory))
                     {
-                        var rentalCopy = OperatingRental.Clone();
+                        var rentalCopy = OperatingInventory.Clone();
 
-                        var index = Rentals.IndexOf(OperatingRental);
-                        Rentals.RemoveAt(index);
+                        var index = Inventorys.IndexOf(OperatingInventory);
+                        Inventorys.RemoveAt(index);
 
-                        Rentals.Insert(index, rentalCopy);
+                        Inventorys.Insert(index, rentalCopy);
                     }
                     else
                     {
@@ -87,19 +86,19 @@ namespace Utility
                         return;
                     }
                 }
-                SetOperatingRentalCommand.Execute(new());
+                SetOperatingInventoryCommand.Execute(new());
             }, busyText);
         }
 
         [RelayCommand]
-        private async Task DeleteRentalAsync(int id)
+        private async Task DeleteInventoryAsync(int id)
         {
             await ExecuteAsync(async () =>
             {
-                if (await _context.DeleteItemByKeyAsync<Rental>(id))
+                if (await _context.DeleteItemByKeyAsync<Category>(id))
                 {
-                    var rental = Rentals.FirstOrDefault(p => p.Id == id);
-                    Rentals.Remove(rental);
+                    var inventory = Inventorys.FirstOrDefault(p => p.Id == id);
+                    Inventorys.Remove(inventory);
                 }
                 else
                 {
@@ -108,7 +107,6 @@ namespace Utility
             }, "Deleting Rental...");
         }
 
-        
         private async Task ExecuteAsync(Func<Task> operation, string? busyText = null)
         {
             IsBusy = true;
@@ -119,6 +117,7 @@ namespace Utility
             }
             catch (Exception ex)
             {
+
             }
             finally
             {

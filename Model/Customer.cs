@@ -13,6 +13,7 @@ namespace Village_Rentals_App.Model
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+        public int CustomerID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ContactNumber { get; set; }
@@ -43,6 +44,10 @@ namespace Village_Rentals_App.Model
             else if (string.IsNullOrWhiteSpace(Email))
             {
                 return (false, $"{nameof(Email)} is required.");
+            }
+            else if (CustomerID == 0)
+            {
+                return (false, $"{nameof(CustomerID)} is required.");
             }
 
             return (true, null);

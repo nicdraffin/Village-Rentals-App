@@ -66,7 +66,7 @@ else
     </div>
     <div class="form-group">
         <label for="rentalcost">Rental Cost:</label>
-        <input type="number" name="rentalcost" id="rentalcost" @bind="Utility.OperatingInventory.RentalCost">
+        <input type="number" step="0.01" name="rentalcost" id="rentalcost" @bind="Utility.OperatingInventory.RentalCost">
     </div>
     <div class="form-group">
         <label for="working">Is Working?</label>
@@ -77,6 +77,10 @@ else
         <input type="checkbox" name="rented" id="rented" @bind="Utility.OperatingInventory.Rented">
     </div>
     <button @onclick="Utility.SaveInventoryCommand.Execute" class="register-button">Update</button>
+</div>
+
+<div>
+
 </div>
 
 <style>
